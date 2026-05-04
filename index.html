@@ -11,56 +11,50 @@
 body {
   margin:0;
   font-family:'Poppins',sans-serif;
-  background: radial-gradient(circle at top, #1a1a1a, #000);
-  color:#fff;
+  background: radial-gradient(circle at top, #0a0a0a, #000);
+  color:#eaeaea;
 }
 
 header {
-  padding:20px;
+  padding:25px;
   text-align:center;
-  color:gold;
-  font-size:26px;
+  color:#d4af37;
+  font-size:28px;
 }
 
 .container {padding:20px;}
 
 .card {
-  background:rgba(255,215,0,0.05);
-  padding:15px;
-  border-radius:12px;
-  margin-top:15px;
-}
-
-.table {
-  width:100%;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(212,175,55,0.2);
+  border-radius:16px;
+  padding:20px;
   margin-top:20px;
-  border-collapse:collapse;
 }
 
-.table th,.table td {
-  padding:12px;
-  border-bottom:1px solid #333;
-  text-align:center;
-}
+.table {width:100%;margin-top:20px;border-collapse:collapse;}
+.table th,.table td {padding:12px;text-align:center;}
+.table th {color:#d4af37;}
 
-.rank {color:gold;font-weight:bold;}
+.rank {color:#ffd700;font-weight:bold;}
 
 button {
-  padding:10px 20px;
-  background:gold;
+  background:linear-gradient(145deg,#d4af37,#a67c00);
   border:none;
+  padding:10px 20px;
   border-radius:20px;
   cursor:pointer;
 }
 
 input, select {
+  background:#111;
+  color:#fff;
+  border:1px solid rgba(212,175,55,0.2);
   padding:10px;
-  margin:5px;
   border-radius:8px;
-  border:none;
 }
 
-.login-btn {
+.top-btn {
   position:fixed;
   top:20px;
   right:20px;
@@ -70,24 +64,32 @@ input, select {
 
 <body>
 
-<header>🏆 Nameless Gold Emporium - VVIP Vault</header>
-<button class="login-btn" onclick="showLogin()">Admin</button>
+<header>
+👑 NAMELESS GOLD EMPORIUM 👑<br>
+<small>Elite Wealth System</small>
+</header>
+
+<div class="top-btn">
+<button onclick="showLogin()">Admin</button>
+</div>
 
 <div class="container">
+
 <div class="card">
-  <h3>Total Nilai Aset: <span id="totalValue">0</span></h3>
+<h3>Total Nilai Aset</h3>
+<h1 id="totalValue">0</h1>
 </div>
 
 <div class="card">
-  <h3>🏆 Top Sultan</h3>
-  <div id="ranking"></div>
+<h3>🏆 Top Sultan</h3>
+<div id="ranking"></div>
 </div>
 
 <table class="table">
 <thead>
 <tr>
 <th>Rank</th>
-<th>Pemilik</th>
+<th>Nama</th>
 <th>Gold</th>
 <th>Iron</th>
 <th>Diamond</th>
@@ -96,46 +98,44 @@ input, select {
 </thead>
 <tbody id="assetTable"></tbody>
 </table>
+
 </div>
 
-<!-- LOGIN -->
+<!-- LOGIN ADMIN -->
 <div class="container" id="loginPage" style="display:none;">
-  <h3>Login Admin</h3>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
 </div>
 
 <!-- ADMIN -->
 <div class="container" id="adminPage" style="display:none;">
 
-<div class="card">
-  <h3>Tambah Asset</h3>
-  <input type="text" id="owner" placeholder="Nama">
-  <select id="type">
-    <option>Gold</option>
-    <option>Diamond</option>
-    <option>Iron</option>
-  </select>
-  <input type="number" id="amount" placeholder="Jumlah">
-  <button onclick="addAsset()">Tambah</button>
-</div>
+<input id="owner" placeholder="Nama">
+<input id="ownerEmail" placeholder="Email">
+<select id="type">
+<option>Gold</option>
+<option>Diamond</option>
+<option>Iron</option>
+</select>
+<input id="amount" type="number" placeholder="Jumlah">
+<button onclick="addAsset()">Tambah</button>
 
-<div class="card">
-  <h3>Ubah Harga</h3>
-  <select id="priceType">
-    <option>Gold</option>
-    <option>Diamond</option>
-    <option>Iron</option>
-  </select>
-  <input type="number" id="newPrice" placeholder="Harga Baru">
-  <button onclick="updatePrice()">Update Harga</button>
-</div>
+<br><br>
+
+<select id="priceType">
+<option>Gold</option>
+<option>Diamond</option>
+<option>Iron</option>
+</select>
+<input id="newPrice" type="number" placeholder="Harga Baru">
+<button onclick="updatePrice()">Update Harga</button>
 
 <table class="table">
 <thead>
 <tr>
-<th>Pemilik</th>
+<th>Nama</th>
+<th>Email</th>
 <th>Jenis</th>
 <th>Jumlah</th>
 <th>Nilai</th>
@@ -147,173 +147,104 @@ input, select {
 
 </div>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCLVox6XIwq7E_8ejMEYqaFOfp0sZZEkyU",
-  authDomain: "namelessgold-a109e.firebaseapp.com",
-  projectId: "namelessgold-a109e",
+const firebaseConfig={
+  apiKey:"AIzaSyCLVox6XIwq7E_8ejMEYqaFOfp0sZZEkyU",
+  authDomain:"namelessgold-a109e.firebaseapp.com",
+  projectId:"namelessgold-a109e"
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth=firebase.auth();
+const db=firebase.firestore();
 
-let prices = {};
+let prices={};
 
-// LOAD HARGA REALTIME
-function loadPrices(){
-  db.collection("prices").onSnapshot(snapshot=>{
-    snapshot.forEach(doc=>{
-      prices[doc.id] = doc.data().value;
-    });
-  });
-}
-loadPrices();
+// LOAD PRICE
+db.collection("prices").onSnapshot(s=>{
+  s.forEach(doc=>prices[doc.id]=doc.data().value);
+});
 
-// LOGIN FIX
-function showLogin(){
-  document.getElementById('loginPage').style.display='block';
-}
+// LOGIN
+function showLogin(){loginPage.style.display='block';}
 
 function login(){
-  let emailInput = document.getElementById('email').value;
-  let passwordInput = document.getElementById('password').value;
-
-  auth.signInWithEmailAndPassword(emailInput, passwordInput)
-  .then((userCredential)=>{
-    let user = userCredential.user;
-
-    // VALIDASI ADMIN
-    if(user.email !== "admin@email.com"){
-      alert("Bukan admin!");
-      auth.signOut();
-      return;
-    }
-
-    document.getElementById('loginPage').style.display='none';
-    document.getElementById('adminPage').style.display='block';
-  })
-  .catch((error)=>{
-    alert("Login gagal: " + error.message);
-  });
+  auth.signInWithEmailAndPassword(email.value,password.value)
+  .then(res=>{
+    if(res.user.email!=="admin@email.com"){alert("Bukan admin");return;}
+    loginPage.style.display='none';
+    adminPage.style.display='block';
+  }).catch(e=>alert(e.message));
 }
 
-// TAMBAH ASSET
+// ADMIN
 function addAsset(){
-  let ownerInput = document.getElementById('owner').value;
-  let typeInput = document.getElementById('type').value;
-  let amountInput = parseInt(document.getElementById('amount').value);
-
-  if(!ownerInput || !amountInput) return alert('Isi data');
-
-  db.collection('assets').add({
-    owner: ownerInput,
-    type: typeInput,
-    amount: amountInput
+  db.collection("assets").add({
+    owner:owner.value,
+    email:ownerEmail.value,
+    type:type.value,
+    amount:parseInt(amount.value)
   });
 }
 
-// DELETE
+function updateAsset(id,val){
+  db.collection("assets").doc(id).update({amount:parseInt(val)});
+}
+
 function deleteAsset(id){
-  db.collection('assets').doc(id).delete();
+  db.collection("assets").doc(id).delete();
 }
 
-// UPDATE HARGA
 function updatePrice(){
-  let type = document.getElementById("priceType").value;
-  let newPrice = parseInt(document.getElementById("newPrice").value);
+  db.collection("prices").doc(priceType.value)
+  .set({value:parseInt(newPrice.value)});
+}
 
-  if(!newPrice) return alert("Masukkan harga!");
+// RENDER
+db.collection("assets").onSnapshot(s=>{
+  let total=0,grouped={};
+  assetTable.innerHTML='';adminTable.innerHTML='';ranking.innerHTML='';
 
-  db.collection("prices").doc(type).set({
-    value: newPrice
+  s.forEach(doc=>{
+    let a=doc.data(),v=a.amount*(prices[a.type]||0);
+    total+=v;
+
+    adminTable.innerHTML+=`
+    <tr>
+    <td>${a.owner}</td>
+    <td>${a.email}</td>
+    <td>${a.type}</td>
+    <td><input value="${a.amount}" onchange="updateAsset('${doc.id}',this.value)"></td>
+    <td>${v}</td>
+    <td><button onclick="deleteAsset('${doc.id}')">X</button></td>
+    </tr>`;
+
+    if(!grouped[a.owner]) grouped[a.owner]={owner:a.owner,gold:0,iron:0,diamond:0,total:0};
+    if(a.type=="Gold") grouped[a.owner].gold+=a.amount;
+    if(a.type=="Iron") grouped[a.owner].iron+=a.amount;
+    if(a.type=="Diamond") grouped[a.owner].diamond+=a.amount;
+    grouped[a.owner].total+=v;
   });
-}
 
-// ANIMASI TOTAL
-function animateValue(id, start, end, duration) {
-  let obj = document.getElementById(id);
-  let range = end - start;
-  let startTime = null;
-
-  function step(timestamp) {
-    if (!startTime) startTime = timestamp;
-    let progress = Math.min((timestamp - startTime) / duration, 1);
-    obj.innerText = Math.floor(progress * range + start);
-    if (progress < 1) requestAnimationFrame(step);
-  }
-
-  requestAnimationFrame(step);
-}
-
-// RENDER DATA
-function render(){
-  db.collection('assets').onSnapshot(snapshot=>{
-    let publicTable = document.getElementById('assetTable');
-    let adminTable = document.getElementById('adminTable');
-    let rankingDiv = document.getElementById('ranking');
-
-    publicTable.innerHTML='';
-    adminTable.innerHTML='';
-    rankingDiv.innerHTML='';
-
-    let total=0;
-    let grouped = {};
-
-    snapshot.forEach(doc=>{
-      let a = doc.data();
-      let value = a.amount * (prices[a.type] || 0);
-
-      adminTable.innerHTML += `
-      <tr>
-        <td>${a.owner}</td>
-        <td>${a.type}</td>
-        <td>${a.amount}</td>
-        <td>${value}</td>
-        <td><button onclick="deleteAsset('${doc.id}')">Hapus</button></td>
-      </tr>`;
-
-      if(!grouped[a.owner]){
-        grouped[a.owner] = {owner:a.owner,gold:0,iron:0,diamond:0,total:0};
-      }
-
-      if(a.type==="Gold") grouped[a.owner].gold += a.amount;
-      if(a.type==="Iron") grouped[a.owner].iron += a.amount;
-      if(a.type==="Diamond") grouped[a.owner].diamond += a.amount;
-
-      grouped[a.owner].total += value;
-      total += value;
-    });
-
-    let sorted = Object.values(grouped).sort((a,b)=>b.total-a.total);
-
-    sorted.forEach((a,i)=>{
-      publicTable.innerHTML += `
-      <tr>
-        <td class="rank">#${i+1}</td>
-        <td>${a.owner}</td>
-        <td>${a.gold}</td>
-        <td>${a.iron}</td>
-        <td>${a.diamond}</td>
-        <td>${a.total}</td>
-      </tr>`;
-
-      if(i<3){
-        rankingDiv.innerHTML += `<div class="rank">#${i+1} ${a.owner} - ${a.total}</div>`;
-      }
-    });
-
-    let current = parseInt(document.getElementById("totalValue").innerText) || 0;
-    animateValue("totalValue", current, total, 800);
+  Object.values(grouped).sort((a,b)=>b.total-a.total).forEach((a,i)=>{
+    assetTable.innerHTML+=`
+    <tr>
+    <td class="rank">#${i+1}</td>
+    <td>${a.owner}</td>
+    <td>${a.gold}</td>
+    <td>${a.iron}</td>
+    <td>${a.diamond}</td>
+    <td>${a.total}</td>
+    </tr>`;
+    if(i<3) ranking.innerHTML+=`<div>#${i+1} ${a.owner} - ${a.total}</div>`;
   });
-}
 
-render();
+  totalValue.innerText=total;
+});
 </script>
 
 </body>
